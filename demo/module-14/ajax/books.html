@@ -1,0 +1,67 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<title>Пример запроса данных с сервера</title>
+    <meta charset="utf-8" />
+    <style>
+			output { display: block }
+		</style>
+		<script type="text/javascript">
+		function getXmlHttpRequest(){
+			if (window.XMLHttpRequest){
+				try{
+					return new XMLHttpRequest();
+				}catch (e){}
+			}else if (window.ActiveXObject){
+				try{
+					return new ActiveXObject('Msxml2.XMLHTTP');
+				}catch (e){}
+				try{
+					return new ActiveXObject('Microsoft.XMLHTTP');
+				}catch (e){}
+			}
+			return null;
+		}
+		function getBook(){
+			var id = document.getElementById("book").value;
+			if((id*1)<0 || isNaN(id)){
+				alert('Строка должна содержать положительное число\nлибо быть пустой!');
+				return false;
+			}
+			var request = getXmlHttpRequest();
+			request.open("GET", 'books.php?id='+id, false);
+			request.send(null);
+			var result = document.getElementById("result");
+			result.firstChild.nodeValue = request.responseText;
+		}
+		function setAgree(){
+			var btn = document.getElementById("btn");
+			var result = document.getElementById("result");
+			var h3 = document.getElementsByTagName("h3")[0];
+			if(document.getElementById("agree").checked){
+				btn.disabled = false;
+				h3.style.display = 'none';
+				result.style.display = '';
+			}else{
+				btn.disabled = true;
+				h3.style.display = '';
+				result.style.display = 'none';
+			}
+		}
+	</script>
+</head>
+<body>
+	<h1>Наши книги</h1>
+	<output id="result" style="display:none">Здесь будет название книги</output>
+	<div>
+		<h3>Признайтесь, что вы не робот</h3>
+		<input name='agree' id='agree' type='checkbox' onchange="setAgree()" />&nbsp;
+		<label for="agree">Я человек</label>
+	</div>
+	<div>
+		<input name='book' id='book' type='text' />
+		<button id='btn' onclick="getBook()" disabled="disabled">Получить книгу</button>
+	</div>
+</body>
+</html>
+
